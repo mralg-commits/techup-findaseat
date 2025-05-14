@@ -48,16 +48,23 @@ async function fetchRides() {
   });
 }
 
-function getUserId() {
-  return localStorage.getItem('user_id');
+function getUserIdFromToken() {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+
+  const payload = token.split('.')[1];
+  const decoded = atob(payload); // base64 decode
+  const parsed = JSON.parse(decoded);
+  return parsed.userId; // assuming your token has { userId: ... }
 }
 
 async function createRide() {
-  const user_id = getUserId();
+  const user_id = getUserIdFromToken();
   if (!user_id) {
-    alert('You are not logged in.');
-    return;
+    alert('User not logged in');
+  return;
   }
+
   const pickup_point = document.getElementById('pickup_region').value;
   const exact_address = document.getElementById('pickup_address').value;
   const destination = document.getElementById('destination').value;
