@@ -64,8 +64,19 @@ async function createRide() {
   const date = document.getElementById('date').value;
   const time = document.getElementById('time').value;
   const token = localStorage.getItem('token');
-  const seats_available = document.getElementById('seats_available').value;
-  
+  const seats = parseInt(document.getElementById('seats').value);
+    if (isNaN(seats) || seats < 1 || seats > 4) {
+      alert('Please enter a valid number of seats (1 to 4).');
+    return;
+  }
+  console.log({
+  user_id,
+  pickup_point,
+  destination,
+  date,
+  time,
+  seats_available: seats
+  });
   const res = await fetch(`${API_BASE}/api/rides`, {
     method: 'POST',
     headers: {
@@ -79,7 +90,7 @@ async function createRide() {
       destination,
       date,
       time,
-      seats_available
+      seats_available: seats
     })
   });
 
