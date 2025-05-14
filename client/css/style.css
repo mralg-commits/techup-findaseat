@@ -1,30 +1,92 @@
+/* Normalize-like base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: 2rem auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7fa;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Container and Layout */
+.container {
+  max-width: 1200px;
+  margin: auto;
   padding: 1rem;
-  background: #f8f9fa;
 }
 
-input, button {
-  display: block;
-  margin: 10px 0;
-  padding: 0.5rem;
-  width: 100%;
-}
-
-button {
+/* Buttons */
+button,
+.btn {
   background-color: #007bff;
   color: white;
   border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.4rem;
   cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
-
-button:hover {
+button:hover,
+.btn:hover {
   background-color: #0056b3;
 }
 
+/* Forms */
+input,
+select,
+textarea {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* Cards */
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+/* Links */
 a {
-  display: inline-block;
-  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Animations (optional) */
+.fade-in {
+  animation: fadeIn ease 1s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
