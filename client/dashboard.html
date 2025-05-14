@@ -7,6 +7,10 @@
 </head>
 <body>
   <h2>Available Rides</h2>
+  <input id="filter_from" placeholder="From Region" />
+  <input id="filter_to" placeholder="To (Postal Code)" />
+  <input id="filter_date" type="date" />
+  <button onclick="filterRides()">Filter</button>
   <ul id="ride-list"></ul>
   <a href="create.html">Create a Ride</a> |
   <a href="index.html" onclick="logout()">Logout</a>

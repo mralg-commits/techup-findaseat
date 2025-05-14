@@ -7,10 +7,18 @@
 </head>
 <body>
   <h2>Create Ride</h2>
-  <input id="pickup" placeholder="Pickup Point" />
-  <input id="dest" placeholder="Destination" />
+  <select id="pickup_region">
+    <option value="North">North</option>
+    <option value="South">South</option>
+    <option value="East">East</option>
+    <option value="West">West</option>
+    <option value="Central">Central</option>
+  </select>
+  <input placeholder="Exact address" id="pickup_address" />
+  <input placeholder="Postal Code (e.g. 123456)" id="destination" pattern="\d{6}" required />
   <input type="date" id="date" />
   <input type="time" id="time" />
+  
   <button onclick="createRide()">Create</button>
   <a href="dashboard.html">Back to Dashboard</a>
   <script src="js/main.js"></script>

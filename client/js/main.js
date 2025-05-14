@@ -21,10 +21,11 @@ async function register() {
   const name = document.getElementById('register-name').value;
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
+  const phone = document.getElementById('phone').value;
   const res = await fetch(`${API_BASE}/api/users/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password })
+    body: JSON.stringify({ name, email, password,phone })
   });
   if (res.ok) {
     window.location.href = 'index.html';
@@ -47,8 +48,9 @@ async function fetchRides() {
 }
 
 async function createRide() {
-  const pickup = document.getElementById('pickup').value;
-  const dest = document.getElementById('dest').value;
+  const pickup_point = document.getElementById('pickup_region').value;
+  const exact_address = document.getElementById('pickup_address').value;
+  const destination = document.getElementById('destination').value;
   const date = document.getElementById('date').value;
   const time = document.getElementById('time').value;
   const token = localStorage.getItem('token');
@@ -60,11 +62,13 @@ async function createRide() {
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
-      user_id: 1, // Replace with real user_id from token (optional backend logic)
-      pickup_point: pickup,
-      destination: dest,
+      user_id, // Replace with real user_id from token (optional backend logic)
+      pickup_point,
+      exact_address,
+      destination,
       date,
-      time
+      time,
+      seats_available
     })
   });
 
@@ -82,3 +86,14 @@ function logout() {
 if (window.location.pathname.endsWith('dashboard.html')) {
   fetchRides();
 }
+
+function filterRides() {
+  const from = document.getElementById('filter_from').value;
+  const to = document.getElementById('filter_to').value;
+  const date = document.getElementById('filter_date').value;
+
+  fetch(`${API_BASE}/api/rides?pickup_point=${from}&destination=${to}&date=${date}`)
+    .then(res => res.json())
+    .then(showRides);
+}
+
