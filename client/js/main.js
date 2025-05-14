@@ -10,7 +10,7 @@ async function login() {
   });
   const data = await res.json();
   if (res.ok) {
-    localStorage.setItem('token', res.token);
+    localStorage.setItem('token', data.token);
     window.location.href = 'dashboard.html';
   } else {
     alert(data.error || 'Login failed');
