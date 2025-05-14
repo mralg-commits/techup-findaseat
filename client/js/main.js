@@ -107,10 +107,8 @@ async function createRide() {
 function logout() {
   localStorage.removeItem('token');
 }
-if (window.location.pathname.endsWith('dashboard.html')) {
-  fetchRides();
-}
-document.addEventListener("DOMContentLoaded", function () {
+
+
 const filterButton = document.getElementById("Filter");
 if (filterButton) {
   document.getElementById("Filter").addEventListener("click", async function () {
@@ -144,5 +142,5 @@ function displayRides(rides) {
     ridesList.appendChild(rideItem);
   });
 }
-})
+
 
