@@ -18,7 +18,22 @@
   <input id="filter_to" placeholder="To postal code" />
   <input id="filter_date" type="date" />
   <button id="Filter">Filter</button>
-  <ul id="rides_list"></ul>
+  <div class="table-container">
+  <table class="ride-table">
+    <thead>
+      <tr>
+      <th>From</th>
+      <th>Address</th> <!-- NEW: exact_address -->
+      <th>To</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Seats</th>
+      <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="rides_list"></tbody>
+  </table>
+</div>
   <a href="create.html">Create a Ride</a> |
   <a href="index.html" onclick="logout()">Logout</a>
   <script src="js/main.js"></script>

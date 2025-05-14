@@ -135,12 +135,37 @@ async function fetchRides() {
 
 function displayRides(rides) {
   const ridesList = document.getElementById("rides_list");
-  ridesList.innerHTML = '';  // Clear any existing rides
-  rides.forEach(ride => {
-    const rideItem = document.createElement("li");
-    rideItem.textContent = `${ride.pickup_point} to ${ride.destination} at ${ride.time}`;
-    ridesList.appendChild(rideItem);
+  ridesList.innerHTML = '';
+
+  if (rides.length === 0) {
+    ridesList.innerHTML = `<tr><td colspan="7" style="text-align: center;">No rides available.</td></tr>`;
+    return;
+  }
+
+  rides.forEach((ride, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${ride.pickup_point}</td>
+      <td>${ride.exact_address || "N/A"}</td>
+      <td>${ride.destination}</td>
+      <td>${ride.date || "N/A"}</td>
+      <td>${ride.time || "N/A"}</td>
+      <td>${ride.seats || "N/A"}</td>
+      <td>
+        <button class="join-btn" onclick="joinRide(${index})">Join</button>
+        <button class="cancel-btn" onclick="cancelRide(${index})">Cancel</button>
+      </td>
+    `;
+    ridesList.appendChild(row);
   });
+}
+
+function joinRide(index) {
+  alert(`You joined ride #${index + 1}`);
+}
+
+function cancelRide(index) {
+  alert(`You canceled ride #${index + 1}`);
 }
 
 
