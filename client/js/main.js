@@ -121,16 +121,17 @@ if (window.location.pathname.endsWith('dashboard.html')) {
   fetchRides();
 }
 
-document.getElementById("Filter").addEventListener("click", async function () {
-  const pickup_region = document.getElementById("filter_from").value;
-  const destination = document.getElementById("filter_to").value;
-  const date = document.getElementById("filter_date").value;
-
-  const res = await fetch(`${API_BASE}/api/rides?pickup_point=${pickup_region}&destination=${destination}&date=${date}`);
-  
-  const rides = await res.json();
-  displayRides(rides);
-});
+const filterButton = document.getElementById("Filter");
+if (filterButton) {
+  document.getElementById("Filter").addEventListener("click", async function () {
+    const pickup_region = document.getElementById("filter_from").value;
+    const destination = document.getElementById("filter_to").value;
+    const date = document.getElementById("filter_date").value;
+    const res = await fetch(`${API_BASE}/api/rides?pickup_point=${pickup_region}&destination=${destination}&date=${date}`);
+    const rides = await res.json();
+    displayRides(rides);
+  });
+}
 
 function displayRides(rides) {
   const ridesList = document.getElementById("rides_list");
