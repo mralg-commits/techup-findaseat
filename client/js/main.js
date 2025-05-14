@@ -10,7 +10,8 @@ async function login() {
   });
   const data = await res.json();
   if (res.ok) {
-    localStorage.setItem('token', data.token);
+    localStorage.setItem('user_id', res.userId);
+    localStorage.setItem('token', res.token);
     window.location.href = 'dashboard.html';
   } else {
     alert(data.error || 'Login failed');
@@ -47,7 +48,16 @@ async function fetchRides() {
   });
 }
 
+function getUserId() {
+  return localStorage.getItem('user_id');
+}
+
 async function createRide() {
+  const user_id = getUserId();
+  if (!user_id) {
+    alert('You are not logged in.');
+    return;
+  }
   const pickup_point = document.getElementById('pickup_region').value;
   const exact_address = document.getElementById('pickup_address').value;
   const destination = document.getElementById('destination').value;
