@@ -1,4 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
 const API_BASE = 'https://techup-findaseat.onrender.com';
 
 async function login() {
@@ -144,4 +143,4 @@ function displayRides(rides) {
   });
 }
 
-})
+
