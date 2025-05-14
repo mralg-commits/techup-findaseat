@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { user_id, pickup_point, exact_address, destination, date, time, seats_available } = req.body;
   const result = await pool.query(
-    'INSERT INTO rides (user_id, pickup_point, destination, date, time) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+    'INSERT INTO rides (user_id, pickup_point, exact_address, destination, date, time, seats_available) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
     [user_id, pickup_point, exact_address, destination, date, time, seats_available]
   );
   res.json(result.rows[0]);
