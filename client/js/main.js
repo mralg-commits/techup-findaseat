@@ -35,17 +35,7 @@ async function register() {
   }
 }
 
-async function fetchRides() {
-  const res = await fetch(`${API_BASE}/api/rides?pickup_point=HQ&destination=Event&date=2025-06-01`);
-  const rides = await res.json();
-  const list = document.getElementById('ride-list');
-  list.innerHTML = '';
-  rides.forEach(ride => {
-    const li = document.createElement('li');
-    li.textContent = `${ride.pickup_point} to ${ride.destination} at ${ride.time}`;
-    list.appendChild(li);
-  });
-}
+
 
 function getUserIdFromToken() {
   const token = localStorage.getItem('token');
@@ -120,7 +110,7 @@ function logout() {
 if (window.location.pathname.endsWith('dashboard.html')) {
   fetchRides();
 }
-
+document.addEventListener("DOMContentLoaded", function () {
 const filterButton = document.getElementById("Filter");
 if (filterButton) {
   document.getElementById("Filter").addEventListener("click", async function () {
@@ -133,6 +123,18 @@ if (filterButton) {
   });
 }
 
+async function fetchRides() {
+  const res = await fetch(`${API_BASE}/api/rides?pickup_point=HQ&destination=Event&date=2025-06-01`);
+  const rides = await res.json();
+  const list = document.getElementById('ride-list');
+  list.innerHTML = '';
+  rides.forEach(ride => {
+    const li = document.createElement('li');
+    li.textContent = `${ride.pickup_point} to ${ride.destination} at ${ride.time}`;
+    list.appendChild(li);
+  });
+}
+
 function displayRides(rides) {
   const ridesList = document.getElementById("rides_list");
   ridesList.innerHTML = '';  // Clear any existing rides
@@ -142,5 +144,5 @@ function displayRides(rides) {
     ridesList.appendChild(rideItem);
   });
 }
-
+})
 
