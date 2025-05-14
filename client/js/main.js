@@ -126,7 +126,8 @@ document.getElementById("Filter").addEventListener("click", async function () {
   const destination = document.getElementById("filter_to").value;
   const date = document.getElementById("filter_date").value;
 
-  fetch(`${API_BASE}/api/rides?pickup_point=${pickup_region}&destination=${destination}&date=${date}`)
+  const res = await fetch(`${API_BASE}/api/rides?pickup_point=${pickup_region}&destination=${destination}&date=${date}`);
+  
   const rides = await res.json();
   displayRides(rides);
 });

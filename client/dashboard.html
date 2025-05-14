@@ -7,18 +7,18 @@
 </head>
 <body>
   <h2>Available Rides</h2>
-  <select id="filter_from" placeholder="From Region" />
-  <!-- Modify the "From" filter to use the dropdown -->
+  <select id="filter_from">
+    <option value="">-- Select Region --</option>
     <option value="North">North</option>
     <option value="South">South</option>
     <option value="East">East</option>
     <option value="West">West</option>
     <option value="Central">Central</option>
   </select>
-  <input id="filter_to" placeholder="To (Postal Code)" />
+  <input id="filter_to" placeholder="To postal code" />
   <input id="filter_date" type="date" />
-  <button onclick="filterRides()">Filter</button>
-  <ul id="ride-list"></ul>
+  <button id="Filter">Filter</button>
+  <ul id="rides_list"></ul>
   <a href="create.html">Create a Ride</a> |
   <a href="index.html" onclick="logout()">Logout</a>
   <script src="js/main.js"></script>
