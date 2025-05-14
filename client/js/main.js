@@ -64,7 +64,8 @@ async function createRide() {
   const date = document.getElementById('date').value;
   const time = document.getElementById('time').value;
   const token = localStorage.getItem('token');
-
+  const seats_available = document.getElementById('seats_available').value;
+  
   const res = await fetch(`${API_BASE}/api/rides`, {
     method: 'POST',
     headers: {
