@@ -150,7 +150,7 @@ function displayRides(rides) {
       <td>${ride.destination}</td>
       <td>${ride.date || "N/A"}</td>
       <td>${ride.time || "N/A"}</td>
-      <td>${ride.seats_seats_available || "N/A"}</td>
+      <td>${ride.seats_available || "N/A"}</td>
       <td>
         <button class="join-btn" onclick="joinRide(${index})">Join</button>
         <button class="cancel-btn" onclick="cancelRide(${index})">Cancel</button>
