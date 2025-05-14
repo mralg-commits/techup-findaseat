@@ -51,11 +51,17 @@ async function fetchRides() {
 function getUserIdFromToken() {
   const token = localStorage.getItem('token');
   if (!token) return null;
-
-  const payload = token.split('.')[1];
-  const decoded = atob(payload); // base64 decode
-  const parsed = JSON.parse(decoded);
-  return parsed.userId; // assuming your token has { userId: ... }
+  try {
+    const payload = token.split('.')[1];
+    // Base64 padding fix
+    const padded = payload.padEnd(payload.length + (4 - payload.length % 4) % 4, '=');
+    const decoded = atob(padded);
+    const parsed = JSON.parse(decoded);
+    return parsed.userId;
+  } catch (err) {
+    console.error('Error decoding token:', err);
+    return null;
+  }
 }
 
 async function createRide() {
