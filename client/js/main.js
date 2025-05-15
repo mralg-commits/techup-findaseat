@@ -160,19 +160,28 @@ function displayRides(rides) {
 
 async function joinRide(rideId) {
   const token = localStorage.getItem('token');
-  const res = await fetch(`${API_BASE}/api/rides/${rideId}/join`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${token}` }
-  });
+  try {
+    const res = await fetch(`${API_BASE}/api/rides/${rideId}/join`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
-  const data = await res.json();
-  if (res.ok) {
-    alert('Joined ride!');
-    document.getElementById("Filter").click(); // refresh list
-  } else {
-    alert(data.error || 'Failed to join');
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Failed to join ride: ${err}`);
+    }
+
+    const data = await res.json();
+    alert(data.message || 'Successfully joined the ride');
+  } catch (err) {
+    console.error('Error joining ride:', err);
+    alert('Failed to join ride');
   }
 }
+
 
 
 async function cancelRide(rideId) {
