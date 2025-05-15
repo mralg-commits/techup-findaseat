@@ -236,23 +236,49 @@ async function loadCreatedRides() {
     headers: { 'Authorization': `Bearer ${token}` }
   });
 
+  if (!res.ok) {
+    console.error('Failed to load created rides');
+    return;
+  }
+
   const rides = await res.json();
   const container = document.getElementById("created_rides_container");
   container.innerHTML = '';
 
+  if (rides.length === 0) {
+    container.innerHTML = '<p>You have not created any rides.</p>';
+    return;
+  }
+
   rides.forEach(ride => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <h4>${ride.pickup_point} to ${ride.destination} on ${ride.time}</h4>
-      <p>Seats left: ${ride.seats_available}</p>
-      <table>
-        <tr><th>Name</th><th>Mobile</th></tr>
-        ${ride.participants.map(p => p.name ? `<tr><td>${p.name}</td><td>${p.mobile}</td></tr>` : '').join('')}
+    const rideDiv = document.createElement('div');
+    rideDiv.classList.add('ride-block');
+
+    const tableRows = ride.participants.map(p => `
+      <tr>
+        <td>${p.name || '-'}</td>
+        <td>${p.mobile || '-'}</td>
+      </tr>
+    `).join('');
+
+    rideDiv.innerHTML = `
+      <h4>${ride.pickup_point} to ${ride.destination} on ${ride.date} at ${ride.time}</h4>
+      <p>Exact Address: ${ride.exact_address}</p>
+      <p>Seats Available: ${ride.seats_available}</p>
+      <table border="1" cellpadding="5">
+        <thead>
+          <tr><th>Name</th><th>Mobile</th></tr>
+        </thead>
+        <tbody>
+          ${tableRows || '<tr><td colspan="2">No participants yet</td></tr>'}
+        </tbody>
       </table>
     `;
-    container.appendChild(div);
+
+    container.appendChild(rideDiv);
   });
 }
+
 
 if (window.location.pathname.endsWith('created.html')) {
   document.addEventListener('DOMContentLoaded', loadCreatedRides);

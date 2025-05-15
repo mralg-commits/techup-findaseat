@@ -120,18 +120,27 @@ router.delete('/:id/cancel', authenticateToken, async (req, res) => {
 router.get('/created', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
 
-  const rides = await pool.query(
-    `SELECT r.*, json_agg(json_build_object('name', u.name, 'mobile', u.mobile_number)) AS participants
-     FROM rides r
-     LEFT JOIN ride_participants rp ON r.id = rp.ride_id
-     LEFT JOIN users u ON rp.user_id = u.id
-     WHERE r.created_by = $1
-     GROUP BY r.id`,
-    [userId]
-  );
+  try {
+    const rides = await pool.query(
+      `SELECT r.*, 
+              COALESCE(json_agg(
+                DISTINCT jsonb_build_object('name', u.name, 'mobile', u.mobile_number)
+              ) FILTER (WHERE u.id IS NOT NULL), '[]') AS participants
+       FROM rides r
+       LEFT JOIN ride_participants rp ON r.id = rp.ride_id
+       LEFT JOIN users u ON rp.user_id = u.id
+       WHERE r.user_id = $1
+       GROUP BY r.id`,
+      [userId]
+    );
 
-  res.json(rides.rows);
+    res.json(rides.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error loading created rides' });
+  }
 });
+
 
 
 
