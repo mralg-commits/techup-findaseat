@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db');
 const router = express.Router();
+const authenticateToken = require('../authenticateToken');
 
 router.get('/', async (req, res) => {
   const { pickup_point, destination, date } = req.query;
