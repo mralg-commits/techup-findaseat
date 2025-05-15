@@ -151,21 +151,73 @@ function displayRides(rides) {
       <td>${ride.date || "N/A"}</td>
       <td>${ride.time || "N/A"}</td>
       <td>${ride.seats_available || "N/A"}</td>
-      <td>
-        <button class="join-btn" onclick="joinRide(${index})">Join</button>
-        <button class="cancel-btn" onclick="cancelRide(${index})">Cancel</button>
-      </td>
+      <td><button onclick="joinRide(${ride.id})">Join</button></td>
+      <td><button onclick="cancelRide(${ride.id})">Cancel</button></td>
     `;
     ridesList.appendChild(row);
   });
 }
 
-function joinRide(index) {
-  alert(`You joined ride #${index + 1}`);
+async function joinRide(rideId) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/api/rides/${rideId}/join`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert('Joined ride!');
+    document.getElementById("Filter").click(); // refresh list
+  } else {
+    alert(data.error || 'Failed to join');
+  }
 }
 
-function cancelRide(index) {
-  alert(`You canceled ride #${index + 1}`);
+
+async function cancelRide(rideId) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/api/rides/${rideId}/cancel`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert('Canceled ride participation!');
+    document.getElementById("Filter").click(); // refresh list
+  } else {
+    alert(data.error || 'Failed to cancel');
+  }
 }
+
+async function loadCreatedRides() {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/api/rides/created`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  const rides = await res.json();
+  const container = document.getElementById("created_rides_container");
+  container.innerHTML = '';
+
+  rides.forEach(ride => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <h4>${ride.pickup_point} to ${ride.destination} on ${ride.time}</h4>
+      <p>Seats left: ${ride.seats_available}</p>
+      <table>
+        <tr><th>Name</th><th>Mobile</th></tr>
+        ${ride.participants.map(p => p.name ? `<tr><td>${p.name}</td><td>${p.mobile}</td></tr>` : '').join('')}
+      </table>
+    `;
+    container.appendChild(div);
+  });
+}
+
+if (window.location.pathname.endsWith('created.html')) {
+  document.addEventListener('DOMContentLoaded', loadCreatedRides);
+}
+
 
 

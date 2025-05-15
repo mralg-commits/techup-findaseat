@@ -20,18 +20,47 @@ router.post('/', async (req, res) => {
   res.json(result.rows[0]);
 });
 
-router.post('/:id/join', async (req, res) => {
+// POST /api/rides/:id/join
+router.post('/rides/:id/join', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
   const rideId = req.params.id;
-  const userId = req.body.user_id;
 
-  const { rows } = await pool.query('SELECT seats_available FROM rides WHERE id = $1', [rideId]);
-  if (rows[0].seats_available <= 0) return res.status(400).json({ error: 'No seats left' });
+  try {
+    // Check if already joined
+    const existing = await pool.query(
+      'SELECT * FROM ride_participants WHERE ride_id = $1 AND user_id = $2',
+      [rideId, userId]
+    );
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: 'Already joined' });
+    }
 
-  await pool.query('INSERT INTO ride_participants (ride_id, user_id) VALUES ($1, $2)', [rideId, userId]);
-  await pool.query('UPDATE rides SET seats_available = seats_available - 1 WHERE id = $1', [rideId]);
+    // Check available seats
+    const rideResult = await pool.query('SELECT seats_available FROM rides WHERE id = $1', [rideId]);
+    const ride = rideResult.rows[0];
+    if (!ride || ride.seats_available <= 0) {
+      return res.status(400).json({ error: 'No seats available' });
+    }
 
-  res.sendStatus(200);
+    // Insert participant and decrement seat count
+    await pool.query('BEGIN');
+    await pool.query(
+      'INSERT INTO ride_participants (ride_id, user_id) VALUES ($1, $2)',
+      [rideId, userId]
+    );
+    await pool.query(
+      'UPDATE rides SET seats_available = seats_available - 1 WHERE id = $1',
+      [rideId]
+    );
+    await pool.query('COMMIT');
+
+    res.json({ message: 'Successfully joined ride' });
+  } catch (err) {
+    await pool.query('ROLLBACK');
+    res.status(500).json({ error: 'Database error' });
+  }
 });
+
 
 router.delete('/:id', async (req, res) => {
   const rideId = req.params.id;
@@ -43,14 +72,45 @@ router.delete('/:id', async (req, res) => {
   res.sendStatus(200);
 });
 
-router.post('/:id/leave', async (req, res) => {
+// DELETE /api/rides/:id/cancel
+router.delete('/rides/:id/cancel', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
   const rideId = req.params.id;
-  const userId = req.body.user_id;
 
-  await pool.query('DELETE FROM ride_participants WHERE ride_id = $1 AND user_id = $2', [rideId, userId]);
-  await pool.query('UPDATE rides SET seats_available = seats_available + 1 WHERE id = $1', [rideId]);
+  try {
+    await pool.query('BEGIN');
+    await pool.query(
+      'DELETE FROM ride_participants WHERE ride_id = $1 AND user_id = $2',
+      [rideId, userId]
+    );
+    await pool.query(
+      'UPDATE rides SET seats_available = seats_available + 1 WHERE id = $1',
+      [rideId]
+    );
+    await pool.query('COMMIT');
 
-  res.sendStatus(200);
+    res.json({ message: 'Canceled participation' });
+  } catch (err) {
+    await pool.query('ROLLBACK');
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// GET /api/rides/created
+router.get('/rides/created', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+
+  const rides = await pool.query(
+    `SELECT r.*, json_agg(json_build_object('name', u.name, 'mobile', u.mobile_number)) AS participants
+     FROM rides r
+     LEFT JOIN ride_participants rp ON r.id = rp.ride_id
+     LEFT JOIN users u ON rp.user_id = u.id
+     WHERE r.created_by = $1
+     GROUP BY r.id`,
+    [userId]
+  );
+
+  res.json(rides.rows);
 });
 
 
