@@ -122,7 +122,7 @@ router.get('/created', authenticateToken, async (req, res) => {
          r.time,
          r.seats_available,
          COALESCE(json_agg(
-           json_build_object('name', u.name, 'phone', u.phone)
+           json_build_object('user_id',u.id, 'name', u.name, 'phone', u.phone)
          ) FILTER (WHERE u.id IS NOT NULL), '[]') AS participants
        FROM rides r
        LEFT JOIN ride_participants rp ON r.id = rp.ride_id
