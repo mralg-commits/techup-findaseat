@@ -151,8 +151,8 @@ function displayRides(rides) {
       <td>${ride.date || "N/A"}</td>
       <td>${ride.time || "N/A"}</td>
       <td>${ride.seats_available || "N/A"}</td>
-      <td><button onclick="joinRide(${ride.id})">Join</button></td>
-      <td><button onclick="cancelRide(${ride.id})">Cancel</button></td>
+      <td><button onclick="joinRide(${ride.id})">Join ride</button></td>
+      <td><button onclick="cancelRide(${ride.id})">Cancel ride</button></td>
     `;
     ridesList.appendChild(row);
   });
