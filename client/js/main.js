@@ -252,10 +252,11 @@ async function loadCreatedRides() {
       <p><strong>To:</strong> ${ride.destination}</p>
       <p><strong>Date:</strong> ${ride.date} <strong>Time:</strong> ${ride.time}</p>
       <p><strong>Seats Left:</strong> ${ride.seats_available}</p>
+      <button onclick="cancelEntireRide(${ride.id})">Cancel Ride</button>
       <h5>Participants</h5>
       <table border="1">
-        <tr><th>Name</th><th>Phone</th></tr>
-        ${participants.map(p => `<tr><td>${p.name}</td><td>${p.phone}</td></tr>`).join('')}
+        <tr><th>Name</th><th>Phone</th><th>Action</th></tr>
+        ${participants.map(p => `<tr><td>${p.name}</td><td>${p.phone}</td><td><button onclick="removeParticipant(${ride.id}, ${p.user_id})">Remove</button></td></tr>`).join('')}
       </table>
     `;
 
@@ -263,6 +264,37 @@ async function loadCreatedRides() {
   });
 }
 
+async function removeParticipant(rideId, userId) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/api/rides/${rideId}/participants/${userId}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (res.ok) {
+    alert('Participant removed.');
+    loadCreatedRides(); // Refresh list
+  } else {
+    alert('Failed to remove participant.');
+  }
+}
+
+async function cancelEntireRide(rideId) {
+  if (!confirm("Are you sure you want to cancel this ride?")) return;
+
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/api/rides/${rideId}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (res.ok) {
+    alert('Ride cancelled.');
+    loadCreatedRides();
+  } else {
+    alert('Failed to cancel ride.');
+  }
+}
 
 
 if (window.location.pathname.endsWith('created.html')) {

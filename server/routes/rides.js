@@ -82,15 +82,6 @@ router.get('/joined', authenticateToken, async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  const rideId = req.params.id;
-
-  const { rows } = await pool.query('SELECT COUNT(*) FROM ride_participants WHERE ride_id = $1', [rideId]);
-  if (+rows[0].count > 0) return res.status(400).json({ error: 'Users already joined' });
-
-  await pool.query('DELETE FROM rides WHERE id = $1', [rideId]);
-  res.sendStatus(200);
-});
 
 // DELETE /api/rides/:id/cancel
 router.delete('/:id/cancel', authenticateToken, async (req, res) => {
@@ -148,6 +139,54 @@ router.get('/created', authenticateToken, async (req, res) => {
   }
 });
 
+// DELETE /api/rides/:rideId/participants/:userId
+router.delete('/:rideId/participants/:userId', authenticateToken, async (req, res) => {
+  const { rideId, userId } = req.params;
+
+  try {
+    await pool.query('BEGIN');
+
+    await pool.query(
+      'DELETE FROM ride_participants WHERE ride_id = $1 AND user_id = $2',
+      [rideId, userId]
+    );
+
+    await pool.query(
+      'UPDATE rides SET seats_available = seats_available + 1 WHERE id = $1',
+      [rideId]
+    );
+
+    await pool.query('COMMIT');
+    res.json({ message: 'Participant removed successfully' });
+  } catch (err) {
+    await pool.query('ROLLBACK');
+    res.status(500).json({ error: 'Failed to remove participant' });
+  }
+});
+
+// DELETE /api/rides/:rideId
+router.delete('/:rideId', authenticateToken, async (req, res) => {
+  const rideId = req.params.rideId;
+  const userId = req.user.userId;
+
+  try {
+    // Ensure the user is the creator
+    const ride = await pool.query('SELECT * FROM rides WHERE id = $1 AND user_id = $2', [rideId, userId]);
+    if (ride.rows.length === 0) {
+      return res.status(403).json({ error: 'Not authorized to delete this ride' });
+    }
+
+    await pool.query('BEGIN');
+    await pool.query('DELETE FROM ride_participants WHERE ride_id = $1', [rideId]);
+    await pool.query('DELETE FROM rides WHERE id = $1', [rideId]);
+    await pool.query('COMMIT');
+
+    res.json({ message: 'Ride cancelled successfully' });
+  } catch (err) {
+    await pool.query('ROLLBACK');
+    res.status(500).json({ error: 'Failed to cancel ride' });
+  }
+});
 
 
 module.exports = router;
