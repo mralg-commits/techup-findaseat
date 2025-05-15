@@ -232,52 +232,37 @@ async function cancelRide(rideId) {
 
 async function loadCreatedRides() {
   const token = localStorage.getItem('token');
+  if (!token) return;
+
   const res = await fetch(`${API_BASE}/api/rides/created`, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
-
-  if (!res.ok) {
-    console.error('Failed to load created rides');
-    return;
-  }
 
   const rides = await res.json();
   const container = document.getElementById("created_rides_container");
   container.innerHTML = '';
 
-  if (rides.length === 0) {
-    container.innerHTML = '<p>You have not created any rides.</p>';
-    return;
-  }
-
   rides.forEach(ride => {
-    const rideDiv = document.createElement('div');
-    rideDiv.classList.add('ride-block');
+    const div = document.createElement('div');
+    const participants = ride.participants || [];
 
-    const tableRows = ride.participants.map(p => `
-      <tr>
-        <td>${p.name || '-'}</td>
-        <td>${p.mobile || '-'}</td>
-      </tr>
-    `).join('');
-
-    rideDiv.innerHTML = `
-      <h4>${ride.pickup_point} to ${ride.destination} on ${ride.date} at ${ride.time}</h4>
-      <p>Exact Address: ${ride.exact_address}</p>
-      <p>Seats Available: ${ride.seats_available}</p>
-      <table border="1" cellpadding="5">
-        <thead>
-          <tr><th>Name</th><th>Mobile</th></tr>
-        </thead>
-        <tbody>
-          ${tableRows || '<tr><td colspan="2">No participants yet</td></tr>'}
-        </tbody>
+    div.innerHTML = `
+      <h4>Ride ID: ${ride.ride_id}</h4>
+      <p><strong>From:</strong> ${ride.pickup_point} (${ride.exact_address})</p>
+      <p><strong>To:</strong> ${ride.destination}</p>
+      <p><strong>Date:</strong> ${ride.date} <strong>Time:</strong> ${ride.time}</p>
+      <p><strong>Seats Left:</strong> ${ride.seats_available}</p>
+      <h5>Participants</h5>
+      <table border="1">
+        <tr><th>Name</th><th>Phone</th></tr>
+        ${participants.map(p => `<tr><td>${p.name}</td><td>${p.phone}</td></tr>`).join('')}
       </table>
     `;
 
-    container.appendChild(rideDiv);
+    container.appendChild(div);
   });
 }
+
 
 
 if (window.location.pathname.endsWith('created.html')) {

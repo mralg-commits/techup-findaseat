@@ -122,10 +122,17 @@ router.get('/created', authenticateToken, async (req, res) => {
 
   try {
     const rides = await pool.query(
-      `SELECT r.*, 
-              COALESCE(json_agg(
-                DISTINCT jsonb_build_object('name', u.name, 'mobile', u.mobile_number)
-              ) FILTER (WHERE u.id IS NOT NULL), '[]') AS participants
+      `SELECT 
+         r.id AS ride_id,
+         r.pickup_point,
+         r.exact_address,
+         r.destination,
+         r.date,
+         r.time,
+         r.seats_available,
+         COALESCE(json_agg(
+           json_build_object('name', u.name, 'phone', u.phone)
+         ) FILTER (WHERE u.id IS NOT NULL), '[]') AS participants
        FROM rides r
        LEFT JOIN ride_participants rp ON r.id = rp.ride_id
        LEFT JOIN users u ON rp.user_id = u.id
@@ -136,11 +143,10 @@ router.get('/created', authenticateToken, async (req, res) => {
 
     res.json(rides.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error loading created rides' });
+    console.error('Error fetching created rides:', err);
+    res.status(500).json({ error: 'Database error' });
   }
 });
-
 
 
 
