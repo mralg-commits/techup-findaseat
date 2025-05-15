@@ -182,6 +182,36 @@ async function joinRide(rideId) {
   }
 }
 
+async function fetchJoinedRides() {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/api/rides/joined`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (!res.ok) {
+    console.error('Failed to load joined rides');
+    return;
+  }
+
+  const rides = await res.json();
+  const tbody = document.getElementById('joined_rides_body');
+  tbody.innerHTML = '';
+
+  rides.forEach((ride, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${ride.pickup_point}</td>
+      <td>${ride.exact_address}</td>
+      <td>${ride.destination}</td>
+      <td>${ride.date}</td>
+      <td>${ride.time}</td>
+      <td>${ride.host_name}</td>
+      <td>${ride.host_contact}</td>
+      <td><button onclick="cancelRide(${ride.id})">Cancel</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
 
 
 async function cancelRide(rideId) {
@@ -226,6 +256,7 @@ async function loadCreatedRides() {
 
 if (window.location.pathname.endsWith('created.html')) {
   document.addEventListener('DOMContentLoaded', loadCreatedRides);
+  document.addEventListener('DOMContentLoaded', fetchJoinedRides);
 }
 
 

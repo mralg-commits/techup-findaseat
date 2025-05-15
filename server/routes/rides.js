@@ -62,6 +62,25 @@ router.post('/:id/join', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/rides/joined
+router.get('/joined', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const result = await pool.query(`
+      SELECT r.id, r.pickup_point, r.exact_address, r.destination, r.date, r.time, r.seats_available, u.name AS host_name, u.phone AS host_contact
+      FROM rides r
+      JOIN ride_participants rp ON r.id = rp.ride_id
+      JOIN users u ON r.user_id = u.id
+      WHERE rp.user_id = $1
+    `, [userId]);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch joined rides' });
+  }
+});
 
 router.delete('/:id', async (req, res) => {
   const rideId = req.params.id;
