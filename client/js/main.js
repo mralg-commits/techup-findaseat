@@ -216,19 +216,27 @@ async function fetchJoinedRides() {
 
 async function cancelRide(rideId) {
   const token = localStorage.getItem('token');
-  const res = await fetch(`${API_BASE}/api/rides/${rideId}/cancel`, {
-    method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${token}` }
-  });
+  try {
+    const res = await fetch(`${API_BASE}/api/rides/${rideId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
-  const data = await res.json();
-  if (res.ok) {
-    alert('Canceled ride participation!');
-    document.getElementById("Filter").click(); // refresh list
-  } else {
-    alert(data.error || 'Failed to cancel');
+    if (!res.ok) {
+      const error = await res.json();
+      alert(`Failed to cancel ride: ${error.error}`);
+    } else {
+      alert("Ride canceled.");
+      loadCreatedRides(); // Refresh the list
+    }
+  } catch (err) {
+    console.error('Error cancelling ride:', err);
+    alert("An error occurred.");
   }
 }
+
 
 async function loadCreatedRides() {
   const token = localStorage.getItem('token');

@@ -170,23 +170,25 @@ router.delete('/:rideId', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
 
   try {
-    // Ensure the user is the creator
+    // Check if user owns the ride
     const ride = await pool.query('SELECT * FROM rides WHERE id = $1 AND user_id = $2', [rideId, userId]);
     if (ride.rows.length === 0) {
-      return res.status(403).json({ error: 'Not authorized to delete this ride' });
+      return res.status(403).json({ error: 'Not authorized to delete this ride.' });
     }
 
-    await pool.query('BEGIN');
-    await pool.query('DELETE FROM ride_participants WHERE ride_id = $1', [rideId]);
-    await pool.query('DELETE FROM rides WHERE id = $1', [rideId]);
-    await pool.query('COMMIT');
+    // Check if there are participants
+    const participants = await pool.query('SELECT COUNT(*) FROM ride_participants WHERE ride_id = $1', [rideId]);
+    if (parseInt(participants.rows[0].count) > 0) {
+      return res.status(400).json({ error: 'Cannot cancel ride with joined participants.' });
+    }
 
-    res.json({ message: 'Ride cancelled successfully' });
+    // Delete the ride
+    await pool.query('DELETE FROM rides WHERE id = $1', [rideId]);
+    res.json({ message: 'Ride deleted successfully.' });
   } catch (err) {
-    await pool.query('ROLLBACK');
-    res.status(500).json({ error: 'Failed to cancel ride' });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error.' });
   }
 });
-
 
 module.exports = router;
