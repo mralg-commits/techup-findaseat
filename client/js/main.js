@@ -253,10 +253,10 @@ async function loadCreatedRides() {
         <tr>
           <td>${p.name}</td>
           <td>${p.phone}</td>
-          <td><button onclick="removeParticipant(${ride.id}, ${p.user_id})">Remove</button></td>
+          <td><button onclick="removeParticipant(${ride.ride_id}, ${p.user_id})">Remove</button></td>
         </tr>` : '').join('')}
     </table>
-    <button onclick="cancelRide(${ride.id})">Cancel Ride</button>
+    <button onclick="cancelRide(${ride.ride_id})">Cancel Ride</button>
     <hr>
   `;
   container.appendChild(div);
