@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
 });
 
 // POST /api/rides/:id/join
-router.post('/rides/:id/join', authenticateToken, async (req, res) => {
+router.post('/:id/join', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const rideId = req.params.id;
 
@@ -74,7 +74,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // DELETE /api/rides/:id/cancel
-router.delete('/rides/:id/cancel', authenticateToken, async (req, res) => {
+router.delete('/:id/cancel', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const rideId = req.params.id;
 
@@ -98,7 +98,7 @@ router.delete('/rides/:id/cancel', authenticateToken, async (req, res) => {
 });
 
 // GET /api/rides/created
-router.get('/rides/created', authenticateToken, async (req, res) => {
+router.get('/created', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
 
   const rides = await pool.query(
