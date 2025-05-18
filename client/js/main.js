@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // User is authenticated
       navLinks.innerHTML = `
         <li><a href="searchrides.html">Search Rides</a></li>
+        <li><a href="create.html">Create Rides</a></li>
         <li><a href="myrides.html">My Rides</a></li>
         <li><a href="#" id="logout-link">Logout</a></li>
       `;
