@@ -194,23 +194,45 @@ async function fetchJoinedRides() {
   }
 
   const rides = await res.json();
-  const tbody = document.getElementById('joined_rides_body');
-  tbody.innerHTML = '';
+  const container = document.getElementById("joined_rides_container");
+  container.innerHTML = '';
 
-  rides.forEach((ride, index) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${ride.pickup_point}</td>
-      <td>${ride.exact_address}</td>
-      <td>${ride.destination}</td>
-      <td>${ride.date}</td>
-      <td>${ride.time}</td>
-      <td>${ride.host_name}</td>
-      <td>${ride.host_contact}</td>
-      <td><button onclick="cancelRide(${ride.id})">Cancel</button></td>
-    `;
-    tbody.appendChild(row);
-  });
+  if (rides.length === 0) {
+    container.innerHTML = '<p>You have not joined any rides yet.</p>';
+    return;
+  }
+
+  const table = document.createElement('table');
+  table.className = 'rides-table';
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>From</th>
+        <th>Exact Address</th>
+        <th>To</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Host</th>
+        <th>Contact</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rides.map(ride => `
+        <tr>
+          <td>${ride.pickup_point}</td>
+          <td>${ride.exact_address}</td>
+          <td>${ride.destination}</td>
+          <td>${ride.date}</td>
+          <td>${ride.time}</td>
+          <td>${ride.host_name}</td>
+          <td>${ride.host_contact}</td>
+          <td><button onclick="cancelRide(${ride.id})">Cancel</button></td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+  container.appendChild(table);
 }
 
 
@@ -250,26 +272,35 @@ async function loadCreatedRides() {
   const container = document.getElementById("created_rides_container");
   container.innerHTML = '';
 
+  if (rides.length === 0) {
+    container.innerHTML = '<p>You have not created any rides yet.</p>';
+    return;
+  }
+
   rides.forEach(ride => {
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <h4>${ride.pickup_point} to ${ride.destination} on ${ride.date} at ${ride.time}</h4>
-    <p>Seats left: ${ride.seats_available}</p>
-    <table border="1">
-      <tr><th>Name</th><th>Phone</th><th>Action</th></tr>
-      ${ride.participants.map(p => p.name ? `
-        <tr>
+    const section = document.createElement('div');
+    section.className = 'ride-block';
+
+    section.innerHTML = `
+      <h3>${ride.pickup_point} → ${ride.destination}</h3>
+      <p><strong>Date:</strong> ${ride.date} | <strong>Time:</strong> ${ride.time}</p>
+      <p><strong>Seats Available:</strong> ${ride.seats_available}</p>
+      <button onclick="cancelEntireRide(${ride.ride_id})">Cancel Ride</button>
+      <h4>Participants</h4>
+      <table class="participants-table">
+        <thead>
+          <tr><th>Name</th><th>Phone</th><th>Action</th></tr>
+        ${ride.participants.map(p => p.name ? `
+          <tr>
           <td>${p.name}</td>
           <td>${p.phone}</td>
           <td><button onclick="removeParticipant(${ride.ride_id}, ${p.user_id})">Remove</button></td>
         </tr>` : '').join('')}
-    </table>
-    <button onclick="cancelRide(${ride.ride_id})">Cancel Ride</button>
-    <hr>
-  `;
-  container.appendChild(div);
-});
-
+        </tbody>
+      </table>
+    `;
+    container.appendChild(section);
+  });
 }
 
 async function removeParticipant(rideId, userId) {

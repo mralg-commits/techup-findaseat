@@ -15,26 +15,12 @@
 </nav>
 
 <body>
-  <h2>Your Created Rides</h2>
-  <div id="created_rides_container"></div>
-  <h2>Rides You've Joined</h2>
-    <table id="joined_rides_table">
-    <thead>
-      <tr>
-      <th>From</th>
-      <th>Exact Address</th>
-      <th>To</th>
-      <th>Date</th>
-      <th>Time</th>
-      <th>Host</th>
-      <th>Contact</th>
-      <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="joined_rides_body">
-    <!-- Joined rides will appear here -->
-  </tbody>
-</table>
+  <div class="container">
+    <h2>Your Created Rides</h2>
+    <div id="created_rides_container" class="rides-section"></div>
+    <h2>Your Joined Rides</h2>
+    <div id="joined_rides_container" class="rides-section"></div>
+  </div> 
   <script src="js/main.js"></script>
 </body>
 </html>
