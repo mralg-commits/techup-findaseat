@@ -305,7 +305,7 @@ async function cancelEntireRide(rideId) {
 }
 
 
-if (window.location.pathname.endsWith('created.html')) {
+if (window.location.pathname.endsWith('myrides.html')) {
   document.addEventListener('DOMContentLoaded', loadCreatedRides);
   document.addEventListener('DOMContentLoaded', fetchJoinedRides);
 }
