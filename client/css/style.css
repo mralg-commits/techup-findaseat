@@ -58,12 +58,13 @@ th {
 }
 
 /* Ride section block */
-.ride-block {
+.ride-section {
   margin-bottom: 30px;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: #fafafa;
+  text-align: left;
 }
 
 /* Buttons */
