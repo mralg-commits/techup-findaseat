@@ -304,6 +304,35 @@ async function cancelEntireRide(rideId) {
   }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const navLinks = document.getElementById('nav-links');
+  const token = localStorage.getItem('token');
+
+  if (navLinks) {
+    if (token) {
+      // User is authenticated
+      navLinks.innerHTML = `
+        <li><a href="dashboard.html">Search Rides</a></li>
+        <li><a href="myrides.html">My Rides</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      `;
+
+      // Use your existing logout() function
+      document.getElementById('logout-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        logout(); // Call your function
+        window.location.href = 'index.html';
+      });
+    } else {
+      // User is not authenticated
+      navLinks.innerHTML = `
+        <li><a href="register.html">Register</a></li>
+        <li><a href="login.html">Login</a></li>
+      `;
+    }
+  }
+});
+
 
 if (window.location.pathname.endsWith('myrides.html')) {
   document.addEventListener('DOMContentLoaded', loadCreatedRides);
