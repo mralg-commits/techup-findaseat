@@ -148,11 +148,10 @@ function displayRides(rides) {
       <td>${ride.pickup_point}</td>
       <td>${ride.exact_address || "N/A"}</td>
       <td>${ride.destination}</td>
-      <td>${ride.date || "N/A"}</td>
-      <td>${ride.time || "N/A"}</td>
+      <td>${new Date(ride.date).toLocaleDateString('en-SG', {day: '2-digit', month: 'long', year: 'numeric'})}</td>
+      <td>${ride.time.slice(0, 5)}</td>
       <td>${ride.seats_available || "N/A"}</td>
       <td><button onclick="joinRide(${ride.id})">Join ride</button></td>
-      <td><button onclick="cancelRide(${ride.id})">Cancel ride</button></td>
     `;
     ridesList.appendChild(row);
   });
@@ -223,8 +222,8 @@ async function fetchJoinedRides() {
           <td>${ride.pickup_point}</td>
           <td>${ride.exact_address}</td>
           <td>${ride.destination}</td>
-          <td>${ride.date}</td>
-          <td>${ride.time}</td>
+          <td>${new Date(ride.date).toLocaleDateString('en-SG', {day: '2-digit', month: 'long', year: 'numeric'})}</td>
+          <td>${ride.time.slice(0, 5)}</td>
           <td>${ride.host_name}</td>
           <td>${ride.host_contact}</td>
           <td><button onclick="cancelRide(${ride.id})">Cancel</button></td>
@@ -283,7 +282,11 @@ async function loadCreatedRides() {
 
     section.innerHTML = `
       <h3>${ride.pickup_point} → ${ride.destination}</h3>
-      <p><strong>Date:</strong> ${ride.date} | <strong>Time:</strong> ${ride.time}</p>
+      <p><strong>Date: ${new Date(ride.date).toLocaleDateString('en-SG', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  })} | <strong>Time:</strong> Time: ${ride.time.slice(0, 5)} </p>
       <p><strong>Seats Available:</strong> ${ride.seats_available}</p>
       <button onclick="cancelEntireRide(${ride.ride_id})">Cancel Ride</button>
       <h4>Participants</h4>
