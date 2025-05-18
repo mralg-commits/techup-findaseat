@@ -325,10 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     } else {
       // User is not authenticated
-      navLinks.innerHTML = `
-        <li><a href="register.html">Register</a></li>
-        <li><a href="login.html">Login</a></li>
-      `;
     }
   }
 });
