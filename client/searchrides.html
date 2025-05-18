@@ -15,7 +15,9 @@
 </nav>
 
 <body>
+  <div class="form-group">
   <h2>Available Rides</h2>
+  <div class="form-group">
   <label for="filter_from">Region of pick-up location</label>
   <select id="filter_from">
     <option value="">-- Select Region --</option>
@@ -48,10 +50,15 @@
     <option value="Woodlands">Woodlands</option>
     <option value="Yishun">Yishun</option>
   </select>
+  </div>
+  <div class="form-group">
   <label for="filter_to">Postal code of destination</label>
   <input id="filter_to" placeholder="Postal code" />
+  </div>
+  <div class="form-group">
   <label for="filter_date">Date of ride</label>
   <input id="filter_date" type="date" />
+  </div>
   <button id="Filter">Filter</button>
   <div class="table-container">
   <table class="ride-table">
@@ -68,6 +75,7 @@
     </thead>
     <tbody id="rides_list"></tbody>
   </table>
+  </div>
 </div>
 <script src="js/main.js"></script>
 </body>
