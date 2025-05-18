@@ -11,7 +11,7 @@ async function login() {
   const data = await res.json();
   if (res.ok) {
     localStorage.setItem('token', data.token);
-    window.location.href = 'dashboard.html';
+    window.location.href = 'searchrides.html';
   } else {
     alert(data.error || 'Login failed');
   }
@@ -97,7 +97,7 @@ async function createRide() {
   });
 
   if (res.ok) {
-    window.location.href = 'dashboard.html';
+    window.location.href = 'searchrides.html';
   } else {
     const data = await res.json();
     alert(data.error || 'Failed to create ride');
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (token) {
       // User is authenticated
       navLinks.innerHTML = `
-        <li><a href="dashboard.html">Search Rides</a></li>
+        <li><a href="searchrides.html">Search Rides</a></li>
         <li><a href="myrides.html">My Rides</a></li>
         <li><a href="#" id="logout-link">Logout</a></li>
       `;
