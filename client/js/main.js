@@ -134,28 +134,47 @@ async function fetchRides() {
 }
 
 function displayRides(rides) {
-  const ridesList = document.getElementById("rides_list");
-  ridesList.innerHTML = '';
+  const container = document.querySelector(".table-container");
+  container.innerHTML = ''; // Clear previous content
 
   if (rides.length === 0) {
-    ridesList.innerHTML = `<tr><td colspan="7" style="text-align: center;">No rides available.</td></tr>`;
+    container.innerHTML = '<p style="text-align: center;">No rides available.</p>';
     return;
   }
 
-  rides.forEach((ride, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${ride.pickup_point}</td>
-      <td>${ride.exact_address || "N/A"}</td>
-      <td>${ride.destination}</td>
-      <td>${new Date(ride.date).toLocaleDateString('en-SG', {day: '2-digit', month: 'long', year: 'numeric'})}</td>
-      <td>${ride.time.slice(0, 5)}</td>
-      <td>${ride.seats_available || "N/A"}</td>
-      <td><button onclick="joinRide(${ride.id})">Join ride</button></td>
-    `;
-    ridesList.appendChild(row);
-  });
+  const table = document.createElement('table');
+  table.className = 'ride-table';
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>From</th>
+        <th>Exact Address</th>
+        <th>To</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Seats</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rides.map(ride => `
+        <tr>
+          <td>${ride.pickup_point}</td>
+          <td>${ride.exact_address || "N/A"}</td>
+          <td>${ride.destination}</td>
+          <td>${new Date(ride.date).toLocaleDateString('en-SG', { day: '2-digit', month: 'long', year: 'numeric' })}</td>
+          <td>${ride.time.slice(0, 5)}</td>
+          <td>${ride.seats_available || "N/A"}</td>
+          <td><button onclick="joinRide(${ride.id})">Join ride</button></td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+
+  container.appendChild(table);
 }
+
+
 
 async function joinRide(rideId) {
   const token = localStorage.getItem('token');
