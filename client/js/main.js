@@ -350,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (token) {
       // User is authenticated
       navLinks.innerHTML = `
+        <li><a href="home.html">Home</a></li>
         <li><a href="searchrides.html">Search Rides</a></li>
         <li><a href="create.html">Create Rides</a></li>
         <li><a href="myrides.html">My Rides</a></li>
