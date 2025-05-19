@@ -11,7 +11,7 @@ async function login() {
   const data = await res.json();
   if (res.ok) {
     localStorage.setItem('token', data.token);
-    window.location.href = 'searchrides.html';
+    window.location.href = 'home.html';
   } else {
     alert(data.error || 'Login failed');
   }
