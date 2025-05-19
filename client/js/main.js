@@ -136,14 +136,14 @@ async function fetchRides() {
 function displayRides(rides) {
   const ridesList = document.getElementById("rides_list");
   const tableContainer = document.querySelector(".table-container");
-  tableContainer.classList.remove("hidden"); 
   ridesList.innerHTML = '';
 
   if (rides.length === 0) {
+    tableContainer.classList.add("hidden");
     ridesList.innerHTML = `<tr><td colspan="7" style="text-align: center;">No rides available.</td></tr>`;
     return;
   }
-
+  tableContainer.classList.remove("hidden");
   rides.forEach((ride, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
