@@ -135,6 +135,7 @@ async function fetchRides() {
 
 function displayRides(rides) {
   const ridesList = document.getElementById("rides_list");
+  const thead = ridesList.querySelector('thead');
   ridesList.innerHTML = '';
 
   if (rides.length === 0) {
