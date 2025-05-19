@@ -134,7 +134,7 @@ async function fetchRides() {
 }
 
 function displayRides(rides) {
-  const container = document.querySelector(".table-container");
+  const container = document.getElementById("rides_container");
   container.innerHTML = ''; // Clear previous content
 
   if (rides.length === 0) {
