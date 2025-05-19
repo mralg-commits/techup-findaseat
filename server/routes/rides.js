@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
   res.json(result.rows);
 });
 
+// POST /api/rides/create
 router.post('/', async (req, res) => {
   const { user_id, pickup_point, exact_address, destination, date, time, seats_available } = req.body;
   const result = await pool.query(
