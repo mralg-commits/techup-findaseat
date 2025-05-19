@@ -110,27 +110,14 @@ function logout() {
 
 
 const filterButton = document.getElementById("Filter");
-
 if (filterButton) {
-  filterButton.addEventListener("click", async function () {
+  document.getElementById("Filter").addEventListener("click", async function () {
     const pickup_region = document.getElementById("filter_from").value;
     const destination = document.getElementById("filter_to").value;
     const date = document.getElementById("filter_date").value;
-
-    try {
-      const res = await fetch(`${API_BASE}/api/rides?pickup_point=${encodeURIComponent(pickup_region)}&destination=${encodeURIComponent(destination)}&date=${encodeURIComponent(date)}`);
-      
-      if (!res.ok) {
-        throw new Error("Failed to fetch rides");
-      }
-
-      const rides = await res.json();
-      displayRides(rides);
-    } catch (err) {
-      console.error("Error fetching rides:", err);
-      const container = document.getElementById("rides_container");
-      container.innerHTML = '<p style="color:red;">Failed to load rides. Please try again.</p>';
-    }
+    const res = await fetch(`${API_BASE}/api/rides?pickup_point=${pickup_region}&destination=${destination}&date=${date}`);
+    const rides = await res.json();
+    displayRides(rides);
   });
 }
 
@@ -147,47 +134,28 @@ async function fetchRides() {
 }
 
 function displayRides(rides) {
-  const container = document.getElementById("rides_container");
-  container.innerHTML = ''; // Clear previous content
+  const ridesList = document.getElementById("rides_list");
+  ridesList.innerHTML = '';
 
   if (rides.length === 0) {
-    container.innerHTML = '<p style="text-align: center;">No rides available.</p>';
+    ridesList.innerHTML = `<tr><td colspan="7" style="text-align: center;">No rides available.</td></tr>`;
     return;
   }
 
-  const table = document.createElement('table');
-  table.className = 'ride-table';
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>From</th>
-        <th>Exact Address</th>
-        <th>To</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Seats</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${rides.map(ride => `
-        <tr>
-          <td>${ride.pickup_point}</td>
-          <td>${ride.exact_address || "N/A"}</td>
-          <td>${ride.destination}</td>
-          <td>${new Date(ride.date).toLocaleDateString('en-SG', { day: '2-digit', month: 'long', year: 'numeric' })}</td>
-          <td>${ride.time.slice(0, 5)}</td>
-          <td>${ride.seats_available || "N/A"}</td>
-          <td><button onclick="joinRide(${ride.id})">Join ride</button></td>
-        </tr>
-      `).join('')}
-    </tbody>
-  `;
-
-  container.appendChild(table);
+  rides.forEach((ride, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${ride.pickup_point}</td>
+      <td>${ride.exact_address || "N/A"}</td>
+      <td>${ride.destination}</td>
+      <td>${new Date(ride.date).toLocaleDateString('en-SG', {day: '2-digit', month: 'long', year: 'numeric'})}</td>
+      <td>${ride.time.slice(0, 5)}</td>
+      <td>${ride.seats_available || "N/A"}</td>
+      <td><button onclick="joinRide(${ride.id})">Join ride</button></td>
+    `;
+    ridesList.appendChild(row);
+  });
 }
-
-
 
 async function joinRide(rideId) {
   const token = localStorage.getItem('token');

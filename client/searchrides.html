@@ -69,7 +69,22 @@
   <input id="filter_date" type="date" />
   </div>
   <button id="Filter">Filter</button>
-  <div class="table-container" id="rides_container"></div>
+  <div class="table-container">
+  <table class="ride-table">
+    <thead>
+      <tr>
+      <th>From</th>
+      <th>Address</th>
+      <th>To</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Seats</th>
+      <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="rides_list"></tbody>
+  </table>
+  </div>
 </div>
 <script src="js/main.js"></script>
 </body>
