@@ -143,6 +143,8 @@ function displayRides(rides) {
     return;
   }
 
+  thead.style.display = 'table-header-group';
+  
   rides.forEach((ride, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
