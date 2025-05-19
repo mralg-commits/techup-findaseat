@@ -110,14 +110,27 @@ function logout() {
 
 
 const filterButton = document.getElementById("Filter");
+
 if (filterButton) {
-  document.getElementById("Filter").addEventListener("click", async function () {
+  filterButton.addEventListener("click", async function () {
     const pickup_region = document.getElementById("filter_from").value;
     const destination = document.getElementById("filter_to").value;
     const date = document.getElementById("filter_date").value;
-    const res = await fetch(`${API_BASE}/api/rides?pickup_point=${pickup_region}&destination=${destination}&date=${date}`);
-    const rides = await res.json();
-    displayRides(rides);
+
+    try {
+      const res = await fetch(`${API_BASE}/api/rides?pickup_point=${encodeURIComponent(pickup_region)}&destination=${encodeURIComponent(destination)}&date=${encodeURIComponent(date)}`);
+      
+      if (!res.ok) {
+        throw new Error("Failed to fetch rides");
+      }
+
+      const rides = await res.json();
+      displayRides(rides);
+    } catch (err) {
+      console.error("Error fetching rides:", err);
+      const container = document.getElementById("rides_container");
+      container.innerHTML = '<p style="color:red;">Failed to load rides. Please try again.</p>';
+    }
   });
 }
 
