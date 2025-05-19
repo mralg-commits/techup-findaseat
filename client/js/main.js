@@ -135,14 +135,17 @@ async function fetchRides() {
 
 function displayRides(rides) {
   const ridesList = document.getElementById("rides_list");
+  const tableContainer = document.querySelector(".table-container");
   ridesList.innerHTML = '';
 
   if (rides.length === 0) {
+    tableContainer.style.display = "none";
     ridesList.innerHTML = `<tr><td colspan="7" style="text-align: center;">No rides available.</td></tr>`;
     return;
   }
 
   rides.forEach((ride, index) => {
+    tableContainer.style.display = "block"; // Show the table
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${ride.pickup_point}</td>
