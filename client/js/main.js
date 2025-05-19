@@ -134,8 +134,9 @@ async function fetchRides() {
 }
 
 function displayRides(rides) {
+  const ridesTable = document.getElementById("ridesTable")
   const ridesList = document.getElementById("rides_list");
-  const thead = ridesList.querySelector('thead');
+  const thead = ridesTable.querySelector('thead');
   ridesList.innerHTML = '';
 
   if (rides.length === 0) {
@@ -144,7 +145,7 @@ function displayRides(rides) {
   }
 
   thead.style.display = 'table-header-group';
-  
+
   rides.forEach((ride, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
