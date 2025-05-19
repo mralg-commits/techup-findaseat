@@ -6,10 +6,6 @@ body {
   background-color: #f4f6f8;
 }
 
-.hidden {
-  display: none !important;
-}
-
 .container {
   max-width: 900px;
   margin: 30px auto;
