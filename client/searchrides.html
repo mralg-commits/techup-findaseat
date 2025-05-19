@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="css/style.css" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZ6TTVTXH9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-YZ6TTVTXH9');
+  </script>
 </head>
 <nav class="navbar">
   <div class="nav-container">
@@ -16,7 +25,7 @@
 
 <body>
   <div class="container">
-  <h2>Available Rides</h2>
+  <h2>Search Available Rides</h2>
   <div class="form-group">
   <label for="filter_from">Region of pick-up location</label>
   <select id="filter_from">
