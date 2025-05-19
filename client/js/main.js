@@ -139,7 +139,6 @@ function displayRides(rides) {
   ridesList.innerHTML = '';
 
   if (rides.length === 0) {
-    tableContainer.style.display = "none";
     ridesList.innerHTML = `<tr><td colspan="7" style="text-align: center;">No rides available.</td></tr>`;
     return;
   }
