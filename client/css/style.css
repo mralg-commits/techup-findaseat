@@ -25,6 +25,7 @@ body {
 }
 
 .title-banner h1 {
+  color: white;
   font-size: 2rem;
   margin: 0;
   font-weight: 600;
